@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - BusCam</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="{{ route('home') }}" class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-primary-600 rounded-xl flex items-center justify-center">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                    </div>
+                    <span class="text-2xl font-display font-bold text-dark-900">BusCam</span>
+                </a>
+                <div class="flex items-center space-x-6">
+                    <a href="{{ route('home') }}" class="text-dark-600 hover:text-primary-600 font-semibold">Home</a>
+                    {{-- <a href="{{ route('agencies.index') }}" class="text-dark-600 hover:text-primary-600 font-semibold">Agencies</a> --}}
+                    <a href="{{ route('login') }}"
+                        class="bg-primary-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-primary-700">Login</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Register Form -->
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-display font-bold text-dark-900 mb-2">Create Account</h2>
+                <p class="text-dark-600">Sign up to start booking tickets</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <form method="POST" action="{{ route('register') }}">
+                    @csrf
+
+                    <!-- Name -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-dark-700 mb-2">Full Name</label>
+                        <input type="text" name="name" value="{{ old('name') }}" required autofocus
+                            class="w-full px-4 py-3 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('name') border-red-500 @enderror">
+                        @error('name')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-dark-700 mb-2">Email</label>
+                        <input type="email" name="email" value="{{ old('email') }}" required
+                            class="w-full px-4 py-3 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('email') border-red-500 @enderror">
+                        @error('email')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-dark-700 mb-2">Phone Number</label>
+                        <input type="tel" name="phone" value="{{ old('phone') }}" placeholder="+237 XXX XXX XXX"
+                            class="w-full px-4 py-3 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('phone') border-red-500 @enderror">
+                        @error('phone')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-dark-700 mb-2">Password</label>
+                        <input type="password" name="password" required
+                            class="w-full px-4 py-3 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('password') border-red-500 @enderror">
+                        @error('password')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold text-dark-700 mb-2">Confirm Password</label>
+                        <input type="password" name="password_confirmation" required
+                            class="w-full px-4 py-3 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit"
+                        class="w-full bg-primary-600 text-white py-3 rounded-lg font-bold text-lg hover:bg-primary-700 transition-all">
+                        Create Account
+                    </button>
+                </form>
+
+                <div class="mt-6 text-center">
+                    <p class="text-dark-600">
+                        Already have an account?
+                        <a href="{{ route('login') }}"
+                            class="text-primary-600 hover:text-primary-700 font-semibold">Log in</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Trust Badge -->
+            <div class="mt-8 text-center">
+                <p class="text-sm text-dark-500">🚌 Join 10,000+ Happy Passengers</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
