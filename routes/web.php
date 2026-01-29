@@ -15,6 +15,10 @@ use App\Http\Controllers\Admin\AgencyManagementController;
 use App\Http\Controllers\Admin\RouteManagementController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\SuperAdmin\AgencyManagementController as SuperAdminAgencyManagementController;
+use App\Http\Controllers\SuperAdmin\UserManagementController;
+use App\Http\Controllers\SuperAdmin\DisputeManagementController;
+use App\Http\Controllers\SuperAdmin\SuperAdminDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,6 +92,36 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/api/routes/info', [RouteController::class, 'getRouteInfo'])->name('api.routes.info');
     Route::get('/api/seats/availability', [BookingController::class, 'getSeatAvailability'])->name('api.seats.availability');
 });
+
+
+// Super Admin Routes
+Route::middleware(['auth', 'super.admin'])->prefix('superadmin')->group(function () {
+    Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('superadmin.dashboard');
+
+    // Agency Management
+    Route::get('/agencies', [AgencyManagementController::class, 'index'])->name('superadmin.agencies.index');
+    Route::post('/agencies/{agency}/suspend', [AgencyManagementController::class, 'suspend'])->name('superadmin.agencies.suspend');
+    Route::post('/agencies/{agency}/activate', [AgencyManagementController::class, 'activate'])->name('superadmin.agencies.activate');
+    Route::delete('/agencies/{agency}', [AgencyManagementController::class, 'destroy'])->name('superadmin.agencies.destroy');
+
+    // User Management
+    Route::get('/users', [UserManagementController::class, 'index'])->name('superadmin.users.index');
+    Route::post('/users/{user}/suspend', [UserManagementController::class, 'suspend'])->name('superadmin.users.suspend');
+    Route::post('/users/{user}/activate', [UserManagementController::class, 'activate'])->name('superadmin.users.activate');
+
+    // Dispute Management
+    Route::get('/disputes', [DisputeManagementController::class, 'index'])->name('superadmin.disputes.index');
+    Route::get('/disputes/{dispute}', [DisputeManagementController::class, 'show'])->name('superadmin.disputes.show');
+    Route::patch('/disputes/{dispute}', [DisputeManagementController::class, 'update'])->name('superadmin.disputes.update');
+});
+
+// Passenger Dispute Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/disputes/create', [\App\Http\Controllers\Passenger\DisputeController::class, 'create'])->name('disputes.create');
+    Route::post('/disputes', [\App\Http\Controllers\Passenger\DisputeController::class, 'store'])->name('disputes.store');
+    Route::get('/disputes', [\App\Http\Controllers\Passenger\DisputeController::class, 'index'])->name('disputes.index');
+});
+
 
 // ============================================================================
 // SHARED ADMIN & STAFF (CONDUCTOR) ROUTES
