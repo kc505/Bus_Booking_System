@@ -37,14 +37,14 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="opacity-75 mb-2">Agency Admins</h6>
-                                <h2 class="mb-0 fw-bold">{{ $stats['total_agency_admins'] }}</h2>
+                                <h2 class="mb-0 fw-bold">{{ $stats['agency_admins'] }}</h2>
                             </div>
                             <div class="opacity-75">
                                 <i class="bi bi-shield-check" style="font-size: 2.5rem;"></i>
                             </div>
                         </div>
                         <div class="mt-3 small opacity-75">
-                            <i class="bi bi-person-badge me-1"></i>Check-in Staff: {{ $stats['total_checkin_staff'] }}
+                            <i class="bi bi-person-badge me-1"></i>Check-in Staff: {{ $stats['checkin_staff'] }}
                         </div>
                     </div>
                 </div>

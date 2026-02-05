@@ -10,7 +10,7 @@ class Dispute extends Model
         'user_id',
         'agency_id',
         'booking_id',
-        'subject',
+        'title',
         'description',
         'status',
         'priority',

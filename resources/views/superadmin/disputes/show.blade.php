@@ -53,8 +53,8 @@
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-4">
-                            <h6 class="text-muted mb-2">Subject</h6>
-                            <h5 class="fw-bold">{{ $dispute->subject }}</h5>
+                            <h6 class="text-muted mb-2">Title</h6>
+                            <h5 class="fw-bold">{{ $dispute->title }}</h5>
                         </div>
 
                         <div class="mb-4">

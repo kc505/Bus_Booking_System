@@ -15,8 +15,8 @@ class SuperAdminDashboardController extends Controller
         $stats = [
             'total_users' => User::count(),
             'total_passengers' => User::where('role', 'passenger')->count(),
-            'total_agency_admins' => User::where('role', 'agency_admin')->count(),
-            'total_checkin_staff' => User::where('role', 'checkin_staff')->count(),
+            'agency_admins' => User::where('role', 'admin')->count(),
+            'checkin_staff' => User::where('role', 'staff')->count(),
             'total_agencies' => Agency::count(),
             'active_agencies' => Agency::where('status', 'active')->count(),
             'suspended_agencies' => Agency::where('status', 'suspended')->count(),

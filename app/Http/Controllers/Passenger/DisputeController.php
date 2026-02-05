@@ -7,6 +7,7 @@ use App\Models\Dispute;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class DisputeController extends Controller
 {
@@ -21,24 +22,33 @@ class DisputeController extends Controller
 
     public function store(Request $request)
 {
-    $validated = $request->validate([
-        'title'       => 'required|string|max:255',
-        'description' => 'required|string|min:10',
-        'booking_id'  => 'nullable|exists:bookings,id',
-        'agency_id'   => 'required|exists:agencies,id',   // ← required now
-    ]);
+    try {
+        $validated = $request->validate([
+            'title'       => 'required|string|max:255',
+            'agency_id'   => 'required|exists:agencies,id',
+            'description' => 'required|string|min:10',
+            'booking_id'  => 'nullable|exists:bookings,id',
+        ]);
 
-    Dispute::create([
-        'user_id'     => Auth::id(),
-        'booking_id'  => $request->booking_id,
-        'agency_id'   => $validated['agency_id'],         // ← now passed
-        'title'       => $validated['title'],
-        'description' => $validated['description'],
-        'status'      => 'pending',
-    ]);
+        $dispute = Dispute::create([
+            'user_id'     => Auth::id(),
+            'agency_id'   => $validated['agency_id'],
+            'booking_id'  => $request->booking_id,
+            'title'       => $validated['title'],
+            'description' => $validated['description'],
+            'status'      => 'pending',
+        ]);
 
-    return redirect()->route('disputes.index')
-                     ->with('success', 'Your dispute has been submitted successfully. We will review it soon.');
+        // Debug: log what was saved
+        Log::info('Dispute created', $dispute->toArray());
+
+        return redirect()->route('disputes.index')
+                         ->with('success', 'Your dispute has been submitted successfully. We will review it soon.');
+    } catch (\Exception $e) {
+        // Catch and show any error
+        Log::error('Dispute creation failed: ' . $e->getMessage());
+        return back()->withErrors(['error' => $e->getMessage()])->withInput();
+    }
 }
 
     public function index()

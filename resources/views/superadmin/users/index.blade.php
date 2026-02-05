@@ -70,9 +70,9 @@
                                 <option value="">All Roles</option>
                                 <option value="passenger" {{ request('role') == 'passenger' ? 'selected' : '' }}>Passengers
                                 </option>
-                                <option value="agency_admin" {{ request('role') == 'agency_admin' ? 'selected' : '' }}>
+                                <option value="agency_admin" {{ request('role') == 'admin' ? 'selected' : '' }}>
                                     Agency Admins</option>
-                                <option value="checkin_staff" {{ request('role') == 'checkin_staff' ? 'selected' : '' }}>
+                                <option value="checkin_staff" {{ request('role') == 'staff' ? 'selected' : '' }}>
                                     Check-in Staff</option>
                             </select>
                         </div>

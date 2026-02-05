@@ -25,8 +25,8 @@ class UserManagementController extends Controller
         $stats = [
             'total' => User::count(),
             'passengers' => User::where('role', 'passenger')->count(),
-            'agency_admins' => User::where('role', 'agency_admin')->count(),
-            'checkin_staff' => User::where('role', 'checkin_staff')->count(),
+            'agency_admins' => User::where('role', 'admin')->count(),
+            'checkin_staff' => User::where('role', 'staff')->count(),
             'active' => User::where('status', 'active')->count(),
             'suspended' => User::where('status', 'suspended')->count(),
         ];
