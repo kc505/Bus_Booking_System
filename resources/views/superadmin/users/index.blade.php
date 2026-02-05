@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.superadmin')
 
 @section('content')
     <div class="container-fluid py-4">
@@ -136,15 +136,27 @@
                                         <i class="bi bi-telephone me-1"></i>{{ $user->phone ?? 'N/A' }}
                                     </td>
                                     <td>
-                                        @if ($user->role == 'passenger')
-                                            <span class="badge bg-primary">Passenger</span>
-                                        @elseif($user->role == 'agency_admin')
-                                            <span class="badge bg-success">Agency Admin</span>
-                                        @elseif($user->role == 'checkin_staff')
-                                            <span class="badge bg-info">Check-in Staff</span>
-                                        @elseif($user->role == 'super_admin')
-                                            <span class="badge bg-danger">Super Admin</span>
-                                        @endif
+                                        @switch(strtolower($user->role))
+                                            @case('super_admin')
+                                                <span class="badge bg-danger">Super Admin</span>
+                                            @break
+
+                                            @case('agency_admin')
+                                                <span class="badge bg-primary">Agency Admin</span>
+                                            @break
+
+                                            @case('checkin_staff')
+                                            @case('staff')
+                                                <span class="badge bg-info">Staff / Conductor</span>
+                                            @break
+
+                                            @case('passenger')
+                                                <span class="badge bg-success">Passenger</span>
+                                            @break
+
+                                            @default
+                                                <span class="badge bg-secondary">{{ ucfirst($user->role) }}</span>
+                                        @endswitch
                                     </td>
                                     <td>
                                         @if ($user->agency)
@@ -163,9 +175,9 @@
                                         @endif
                                     </td>
                                     <td class="small text-muted">{{ $user->created_at->format('M d, Y') }}</td>
-                                    <td class="text-end pe-4">
+                                    <td class="text-end pe-4 onhover-show">
                                         @if ($user->role != 'super_admin')
-                                            <div class="btn-group btn-group-sm">
+                                            <div class="btn-group btn-group-sm" role="group">
                                                 @if ($user->status == 'active')
                                                     <form action="{{ route('superadmin.users.suspend', $user) }}"
                                                         method="POST" class="d-inline">
@@ -191,26 +203,26 @@
                                         @endif
                                     </td>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="text-center py-5">
-                                        <div class="text-muted">
-                                            <i class="bi bi-inbox d-block mb-3"
-                                                style="font-size: 3rem; opacity: 0.3;"></i>
-                                            <p class="mb-0">No users found</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center py-5">
+                                            <div class="text-muted">
+                                                <i class="bi bi-inbox d-block mb-3"
+                                                    style="font-size: 3rem; opacity: 0.3;"></i>
+                                                <p class="mb-0">No users found</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+                @if ($users->hasPages())
+                    <div class="card-footer bg-white border-top py-3">
+                        {{ $users->links() }}
+                    </div>
+                @endif
             </div>
-            @if ($users->hasPages())
-                <div class="card-footer bg-white border-top py-3">
-                    {{ $users->links() }}
-                </div>
-            @endif
         </div>
-    </div>
-@endsection
+    @endsection

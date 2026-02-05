@@ -19,6 +19,7 @@ class Agency extends Model
         'phone',
         'email',
         'total_buses',
+        'admin_id',
     ];
 
     protected $casts = [
@@ -54,4 +55,8 @@ class Agency extends Model
     {
         return $this->routes()->count();
     }
+    public function admin()
+{
+    return $this->belongsTo(User::class, 'admin_id');   // adjust foreign key if it's different (e.g. 'user_id' or 'agency_admin_id')
+}
 }

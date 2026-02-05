@@ -35,4 +35,15 @@ class SuperAdminDashboardController extends Controller
 
         return view('superadmin.dashboard', compact('stats', 'recentDisputes', 'recentAgencies'));
     }
+    public function reports()
+{
+    // For now — minimal placeholder (expand later with real stats)
+    $stats = [
+        'total_bookings' => \App\Models\Booking::count(),
+        'total_revenue'  => \App\Models\Booking::where('payment_status', 'paid')->sum('total_amount'),
+        'total_disputes' => \App\Models\Dispute::count(),
+    ];
+
+    return view('superadmin.reports.index', compact('stats'));
+}
 }

@@ -10,6 +10,19 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // 0. SUPER ADMIN (highest level - manages everything, including agencies)
+        User::updateOrCreate(
+            ['email' => 'superadmin@buscam.cm'],
+            [
+                'name'     => 'Super Admin',
+                'password' => Hash::make('supersecret2026'), // ← change this in production!
+                'role'     => 'super_admin',                   // ← make sure this role exists in your logic
+                'agency_id' => null,
+                'status' => 'active',
+                'email_verified_at' => now(),                        // not tied to any agency
+            ]
+        );
+
         // 1. Core Data (Cities, then Agencies, then Routes/Buses)
         $this->call([
             CitiesSeeder::class,
@@ -22,9 +35,9 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'admin@musango.cm'],
             [
-                'name' => 'Musango Admin',
-                'password' => Hash::make('password'),
-                'role' => 'admin',
+                'name'      => 'Musango Admin',
+                'password'  => Hash::make('password'),
+                'role'      => 'admin',
                 'agency_id' => 1, // Linked to Musango
             ]
         );
@@ -33,9 +46,9 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'staff@musango.cm'],
             [
-                'name' => 'Musango Conductor',
-                'password' => Hash::make('password'),
-                'role' => 'staff',
+                'name'      => 'Musango Conductor',
+                'password'  => Hash::make('password'),
+                'role'      => 'staff',
                 'agency_id' => 1, // Linked to Musango
             ]
         );
@@ -44,9 +57,9 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'passenger@gmail.com'],
             [
-                'name' => 'Regular Passenger',
-                'password' => Hash::make('password'),
-                'role' => 'passenger',
+                'name'      => 'Regular Passenger',
+                'password'  => Hash::make('password'),
+                'role'      => 'passenger',
                 'agency_id' => null,
             ]
         );

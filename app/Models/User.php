@@ -21,6 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'status',
+        'agency_id',
     ];
 
     /**
@@ -60,5 +63,13 @@ public function checkins()
 public function isStaff()
 {
     return $this->role === 'staff' || $this->role === 'admin';
+}
+public function agency()
+{
+    return $this->belongsTo(Agency::class, 'agency_id'); // adjust foreign key if different
+}
+public function disputes()
+{
+    return $this->hasMany(Dispute::class);
 }
 }

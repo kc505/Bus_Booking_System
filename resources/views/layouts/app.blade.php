@@ -14,12 +14,16 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap"
         rel="stylesheet">
 
+    <!-- Bootstrap CSS (make sure this is present) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
     <!-- Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
 
-<body class="antialiased bg-gray-50">
+<body class="antialiased bg-gray-50 d-flex flex-column min-vh-100">
     <!-- Navigation -->
     <nav class="bg-white shadow-sm sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -89,6 +93,10 @@
                                     </a>
                                 @else
                                     <!-- CUSTOMER VIEW -->
+                                    <a href="{{ route('disputes.index') }}"
+                                        class="block px-4 py-2 text-dark-700 hover:bg-gray-100">
+                                        <i class="bi bi-exclamation-triangle me-2"></i> My Disputes
+                                    </a>
                                     <a href="{{ route('dashboard') }}"
                                         class="block px-4 py-2 text-dark-700 hover:bg-gray-100">
                                         <i class="bi bi-house me-2"></i>Dashboard
@@ -145,7 +153,8 @@
             <div class="px-4 py-4 space-y-3">
                 <a href="{{ route('agencies.index') }}"
                     class="block text-dark-600 hover:text-primary-600 font-medium">Book Ticket</a>
-                <a href="{{ route('about') }}" class="block text-dark-600 hover:text-primary-600 font-medium">About</a>
+                <a href="{{ route('about') }}"
+                    class="block text-dark-600 hover:text-primary-600 font-medium">About</a>
                 <a href="{{ route('contact') }}"
                     class="block text-dark-600 hover:text-primary-600 font-medium">Contact</a>
             </div>
@@ -195,75 +204,100 @@
                 </div>
             </div>
         @endif
+    </nav>
 
-        <!-- Main Content -->
-        <main>
-            @yield('content')
-        </main>
-
-        <!-- Footer -->
-        <footer class="bg-dark-900 text-white mt-20">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div class="grid md:grid-cols-4 gap-8">
-                    <div>
-                        <div class="flex items-center space-x-2 mb-4">
-                            <div
-                                class="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
-                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                                </svg>
-                            </div>
-                            <span class="text-xl font-display font-bold">BusCam</span>
-                        </div>
-                        <p class="text-gray-400">Making bus travel in Cameroon easier, safer, and more convenient.</p>
-                    </div>
-
-                    <div>
-                        <h3 class="font-display font-bold mb-4">Quick Links</h3>
-                        <ul class="space-y-2 text-gray-400">
-                            <li><a href="{{ route('agencies.index') }}"
-                                    class="hover:text-primary-400 transition-colors">Book Ticket</a></li>
-                            <li><a href="{{ route('about') }}" class="hover:text-primary-400 transition-colors">About
-                                    Us</a></li>
-                            <li><a href="{{ route('contact') }}"
-                                    class="hover:text-primary-400 transition-colors">Contact</a></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h3 class="font-display font-bold mb-4">Support</h3>
-                        <ul class="space-y-2 text-gray-400">
-                            <li><a href="#" class="hover:text-primary-400 transition-colors">Help Center</a>
-                            </li>
-                            <li><a href="#" class="hover:text-primary-400 transition-colors">Terms of
-                                    Service</a></li>
-                            <li><a href="#" class="hover:text-primary-400 transition-colors">Privacy Policy</a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h3 class="font-display font-bold mb-4">Contact</h3>
-                        <ul class="space-y-2 text-gray-400">
-                            <li>Email: info@buscam.cm</li>
-                            <li>Phone: +237 XXX XXX XXX</li>
-                            <li>Yaoundé, Cameroon</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="border-t border-dark-700 mt-8 pt-8 text-center text-gray-400">
-                    <p>&copy; {{ date('Y') }} BusCam. All rights reserved.</p>
+    <!-- Main wrapper - this expands and pushes footer down -->
+    <main class="flex-grow-1 d-flex flex-column pt-4 pb-5">
+        <!-- Flash Messages -->
+        @if (session('success'))
+            <div class="container">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             </div>
-        </footer>
+        @endif
 
-        <!-- Alpine.js for dropdowns -->
-        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        @if (session('error'))
+            <div class="container">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        @endif
 
-        @stack('scripts')
+        <!-- Page content - this grows -->
+        <div class="container flex-grow-1">
+            @yield('content')
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark-900 text-white mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div
+                            class="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                            </svg>
+                        </div>
+                        <span class="text-xl font-display font-bold">BusCam</span>
+                    </div>
+                    <p class="text-gray-400">Making bus travel in Cameroon easier, safer, and more convenient.</p>
+                </div>
+
+                <div>
+                    <h3 class="font-display font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="{{ route('agencies.index') }}"
+                                class="hover:text-primary-400 transition-colors">Book Ticket</a></li>
+                        <li><a href="{{ route('about') }}" class="hover:text-primary-400 transition-colors">About
+                                Us</a></li>
+                        <li><a href="{{ route('contact') }}"
+                                class="hover:text-primary-400 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-display font-bold mb-4">Support</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-primary-400 transition-colors">Help Center</a>
+                        </li>
+                        <li><a href="#" class="hover:text-primary-400 transition-colors">Terms of
+                                Service</a></li>
+                        <li><a href="#" class="hover:text-primary-400 transition-colors">Privacy Policy</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-display font-bold mb-4">Contact</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>Email: info@buscam.cm</li>
+                        <li>Phone: +237 XXX XXX XXX</li>
+                        <li>Yaoundé, Cameroon</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-dark-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; {{ date('Y') }} BusCam. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Alpine.js for dropdowns -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    @stack('scripts')
 </body>
 
 </html>

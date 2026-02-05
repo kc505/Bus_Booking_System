@@ -55,8 +55,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // DASHBOARD
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // PROFILE
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+   // Profile - Role-based view
+ Route::get('/profile', function () {
+    $user = auth()->user();
+
+    if (!$user) {
+        abort(403);
+    }
+
+    if ($user->role === 'super_admin') {
+        return view('superadmin.profile', compact('user'));
+    }
+
+    return view('profile.edit', compact('user'));
+ })->name('profile.edit');
+
+    // The update and destroy routes stay the same
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
@@ -99,10 +113,16 @@ Route::middleware(['auth', 'super.admin'])->prefix('superadmin')->group(function
     Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('superadmin.dashboard');
 
     // Agency Management
-    Route::get('/agencies', [AgencyManagementController::class, 'index'])->name('superadmin.agencies.index');
-    Route::post('/agencies/{agency}/suspend', [AgencyManagementController::class, 'suspend'])->name('superadmin.agencies.suspend');
-    Route::post('/agencies/{agency}/activate', [AgencyManagementController::class, 'activate'])->name('superadmin.agencies.activate');
-    Route::delete('/agencies/{agency}', [AgencyManagementController::class, 'destroy'])->name('superadmin.agencies.destroy');
+    Route::get('/agencies', [SuperAdminAgencyManagementController::class, 'index'])->name('superadmin.agencies.index');
+    Route::post('/agencies/{agency}/suspend', [SuperAdminAgencyManagementController::class, 'suspend'])->name('superadmin.agencies.suspend');
+    Route::post('/agencies/{agency}/activate', [SuperAdminAgencyManagementController::class, 'activate'])->name('superadmin.agencies.activate');
+    Route::delete('/agencies/{agency}', [SuperAdminAgencyManagementController::class, 'destroy'])->name('superadmin.agencies.destroy');
+    Route::get('/agencies/create', [SuperAdminAgencyManagementController::class, 'create'])->name('superadmin.agencies.create');
+    Route::post('/agencies', [SuperAdminAgencyManagementController::class, 'store'])->name('superadmin.agencies.store');
+    Route::get('/agencies/{agency}', [SuperAdminAgencyManagementController::class, 'show'])->name('superadmin.agencies.show');
+    Route::get('/agencies/{agency}/edit', [SuperAdminAgencyManagementController::class, 'edit'])->name('superadmin.agencies.edit');
+    Route::put('/agencies/{agency}', [SuperAdminAgencyManagementController::class, 'update'])->name('superadmin.agencies.update');
+
 
     // User Management
     Route::get('/users', [UserManagementController::class, 'index'])->name('superadmin.users.index');
@@ -112,7 +132,14 @@ Route::middleware(['auth', 'super.admin'])->prefix('superadmin')->group(function
     // Dispute Management
     Route::get('/disputes', [DisputeManagementController::class, 'index'])->name('superadmin.disputes.index');
     Route::get('/disputes/{dispute}', [DisputeManagementController::class, 'show'])->name('superadmin.disputes.show');
+    Route::post('/disputes/{dispute}/respond', [DisputeManagementController::class, 'respond'])->name('superadmin.disputes.respond');
+    Route::post('/disputes/{dispute}/resolve', [DisputeManagementController::class, 'resolve'])->name('superadmin.disputes.resolve');
     Route::patch('/disputes/{dispute}', [DisputeManagementController::class, 'update'])->name('superadmin.disputes.update');
+
+    // Reports
+    Route::get('/reports', [SuperAdminDashboardController::class, 'reports'])->name('superadmin.reports');
+
+
 });
 
 // Passenger Dispute Routes
@@ -120,6 +147,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/disputes/create', [\App\Http\Controllers\Passenger\DisputeController::class, 'create'])->name('disputes.create');
     Route::post('/disputes', [\App\Http\Controllers\Passenger\DisputeController::class, 'store'])->name('disputes.store');
     Route::get('/disputes', [\App\Http\Controllers\Passenger\DisputeController::class, 'index'])->name('disputes.index');
+    Route::get('/disputes/{dispute}', [\App\Http\Controllers\Passenger\DisputeController::class, 'show'])->name('disputes.show');
 });
 
 
